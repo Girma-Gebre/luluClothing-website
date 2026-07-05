@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LULU Clothing - Modern, luxury, and sustainable fashion designed for the contemporary woman. Explore our collections.">
+    <title>LULU Clothing | Elevated Women's Fashion</title>
+    
+    <!-- Google Fonts: Elegant Serif and Clean Sans-Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet.js (For clean interactive boutique map) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!--fav icon -->
+        <link rel="icon" href="./image/images.png" sizes="32x32"> 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        lulu: {
+                            beige: '#F9F6F0',
+                            clay: '#D4C5B9',
+                            gold: '#C5A880',
+                            charcoal: '#1A1A1A',
+                            sand: '#F3EFE9',
+                            darkGold: '#A58B65',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/css">
+        /* Custom overrides and interactive adjustments */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9F6F0;
+            color: #1A1A1A;
+        }
+        
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Custom scrollbar to match high-end aesthetic */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F9F6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4C5B9;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C5A880;
+        }
+
+        /* Smooth tab transition */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .view-section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Leaflet map custom size */
+        #boutique-map {
+            height: 380px;
+            width: 100%;
+            border-radius: 0.75rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-lulu-gold selection:text-white">
+
+    <!-- Header / Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-[#1e393d]/80  backdrop-blur-md border-b border-lulu-clay/30 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#home" onclick="navigateTo('home')" class="flex flex-col items-start select-none">
+                <span class="font-serif text-3xl font-light tracking-[0.25em] uppercase leading-none">LULU</span>
+                <span class="text-[9px] tracking-[0.5em] text-lulu-gold uppercase font-medium mt-1">C L O T H I N G</span>
+            </a>
+
+            <!-- Desktop Navigation Menu -->
+            <nav class="hidden md:flex space-x-8 lg:space-x-12">
+                <a href="#home" onclick="navigateTo('home')" class="nav-link text-sm font-medium tracking-wider uppercase text-lulu-charcoal hover:text-lulu-gold transition-colors duration-200" id="nav-home">Home</a>
+                <a href="#about" onclick="navigateTo('about')" class="nav-link text-sm font-medium tracking-wider uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors duration-200" id="nav-about">About</a>
+                <a href="#services" onclick="navigateTo('services')" class="nav-link text-sm font-medium tracking-wider uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors duration-200" id="nav-services">Services</a>
+                <a href="#gallery" onclick="navigateTo('gallery')" class="nav-link text-sm font-medium tracking-wider uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors duration-200" id="nav-gallery">Gallery</a>
+                <a href="#contact" onclick="navigateTo('contact')" class="nav-link text-sm font-medium tracking-wider uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors duration-200" id="nav-contact">Contact</a>
+            </nav>
+
+            <!-- Utility Icons (Cart, Wishlist, Mobile menu toggles) -->
+            <div class="flex items-center space-x-6"> 
+
+                <!-- Mobile Navigation Toggle Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-lulu-charcoal focus:outline-none" aria-label="Toggle menu">
+                    <i id="menu-icon" class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Side Menu Backdrop & Drawer -->
+    <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/40 z-40 hidden backdrop-blur-sm transition-opacity duration-300" onclick="toggleMobileMenu()"></div>
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-4/5 max-w-sm bg-lulu-beige z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col justify-between">
+        <div class="p-6">
+            <div class="flex items-center justify-between border-b border-lulu-clay/30 pb-6 mb-8">
+                <span class="font-serif text-2xl tracking-[0.2em] text-lulu-charcoal">LULU</span>
+                <button onclick="toggleMobileMenu()" class="text-lulu-charcoal hover:text-lulu-gold transition-colors duration-200">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+            </div>
+            
+            <nav class="flex flex-col space-y-6">
+                <a href="#home" onclick="navigateTo('home'); toggleMobileMenu();" class="mobile-nav-link text-lg font-medium tracking-widest uppercase text-lulu-charcoal hover:text-lulu-gold transition-colors">Home</a>
+                <a href="#about" onclick="navigateTo('about'); toggleMobileMenu();" class="mobile-nav-link text-lg font-medium tracking-widest uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors">About Us</a>
+                <a href="#services" onclick="navigateTo('services'); toggleMobileMenu();" class="mobile-nav-link text-lg font-medium tracking-widest uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors">Services</a>
+                <a href="#gallery" onclick="navigateTo('gallery'); toggleMobileMenu();" class="mobile-nav-link text-lg font-medium tracking-widest uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors">Gallery</a>
+                <a href="#contact" onclick="navigateTo('contact'); toggleMobileMenu();" class="mobile-nav-link text-lg font-medium tracking-widest uppercase text-lulu-charcoal/70 hover:text-lulu-gold transition-colors">Contact</a>
+            </nav>
+        </div>
+        
+        <div class="p-6 border-t border-lulu-clay/30 bg-lulu-sand">
+            <p class="text-xs uppercase tracking-wider text-lulu-charcoal/50 mb-3">Follow our journey</p>
+            <div class="flex space-x-4">
+                <a target="_blank" title="Instagram" href="https://www.instagram.com/lulu__addis?igsh=a3pmb3lwd280a2t2" class="text-lulu-charcoal/70 hover:text-lulu-gold"><i class="fa-brands fa-instagram text-xl"></i></a>
+                <a title="TikTok" target="_blank" href="https://www.tiktok.com/@lulu_addis?_r=1&_t=ZS-97Yamaj6qbY" class="text-lulu-charcoal/70 hover:text-lulu-gold"><i class="fa-brands fa-tiktok text-xl"></i></a>
+                <a title="Facebook" target="_blank" href="https://web.facebook.com/people/LULU/100064708241803/?locale=nb_NO#" class="text-lulu-charcoal/70 hover:text-lulu-gold"><i class="fa-brands fa-facebook text-xl"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT VIEW WRAPPERS -->
+    <main class="flex-grow">
+
+        <!-- ========================================== -->
+        <!-- 1. HOME PAGE VIEW                          -->
+        <!-- ========================================== -->
+        <section id="view-home" class="view-section active animate-fade-in">
+            <!-- Hero Section -->
+            <div class="relative bg-lulu-sand overflow-hidden">
+                <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="px-4 sm:px-6 sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left lg:flex lg:items-center py-12 md:py-20 lg:py-32">
+                        <div class="space-y-6">
+                            <span class="inline-flex items-center text-xs font-semibold tracking-[0.25em] text-lulu-gold uppercase bg-white/80 px-4 py-2 rounded-full shadow-sm">
+                                NEW SEASON COLLECTION
+                            </span>
+                            <h1 class="font-serif text-5xl md:text-7xl font-light text-lulu-charcoal leading-tight">
+                                Timeless Elegance <br>
+                                <span class="font-normal italic text-lulu-darkGold">Uncompromising</span> Quality
+                            </h1>
+                            <p class="text-base text-lulu-charcoal/80 max-w-lg leading-relaxed">
+                                Beautiful, conscious clothing for women. Timeless styles made from pure fabrics and designed to last.
+                            </p>
+                            <div class="pt-4 flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4">
+                                <a href="#gallery" onclick="navigateTo('gallery')" class="inline-block px-8 py-4 bg-lulu-charcoal text-white hover:bg-lulu-gold transition-all duration-300 text-sm font-semibold tracking-widest uppercase shadow-md hover:shadow-xl rounded-none text-center">
+                                    Shop Collection
+                                </a>
+                                <a href="#about" onclick="navigateTo('about')" class="inline-block px-8 py-4 border border-lulu-charcoal/30 text-lulu-charcoal hover:border-lulu-gold hover:text-lulu-gold transition-all duration-300 text-sm font-semibold tracking-widest uppercase rounded-none text-center">
+                                    Our Story
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Hero Image Showcase -->
+                    <div class="mt-12 lg:mt-0 lg:col-span-6 relative flex items-center justify-center p-4">
+                        <div class="relative w-full max-w-lg lg:max-w-md xl:max-w-lg">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-lulu-gold/20 to-transparent rounded-3xl transform rotate-3 scale-105"></div>
+                            <!-- Clean fallbacks used for Unsplash assets -->
+                            <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAGkSUpN1-KosCCD52yIsCPkmtkP-0h-E461r728Hbgjv3RK-9k8x6M2oZ6THFtk6LA8In2CeOFTx14UqW-Y6I99bpixDsqLYhXxD_taNZ1jgegF94oHZ0OBixtY2iOyryfx5EOaHKFDx53f=s680-w680-h510-rw" 
+                                 alt="Elegant LULU Collection Satin Wear" 
+                                 class="relative rounded-2xl shadow-2xl object-cover w-full h-[500px] z-10 hover:scale-[1.02] transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/800x1000/F3EFE9/1A1A1A?text=LULU+Satin+Wear'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Hot Collections Highlight -->
+            <div class="py-16 bg-lulu-sand">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-lulu-gold">Curated Favorites</span>
+                            <h2 class="font-serif text-3xl md:text-5xl font-light text-lulu-charcoal mt-2">New Season Arrivals</h2>
+                        </div>
+                        <a href="#gallery" onclick="navigateTo('gallery')" class="mt-4 md:mt-0 inline-flex items-center gap-2 text-sm font-semibold text-lulu-gold hover:text-lulu-charcoal transition-colors group">
+                            View Full Collection <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+
+                    <!-- Highlight Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Highlight item 1 -->
+                        <div class="group relative bg-white overflow-hidden rounded-xl border border-lulu-clay/20 shadow-sm">
+                            <div class="h-80 overflow-hidden relative">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd0FZmH6ESFGNOlfdb2ocG3pOkM-X5FbY5ig&s" alt="Wool trench coat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Trench+Coat'">
+                                <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                </div>
+                            <div class="p-6 text-center">
+                                <h3 class="font-serif text-lg font-medium text-lulu-charcoal">Strapless Midi Dress</h3>
+                                <a href="#gallery" onclick="navigateTo('gallery')" class="inline-block mt-3 text-xs uppercase tracking-widest font-semibold text-lulu-gold hover:text-lulu-charcoal transition-colors">Discover LULU</a>
+                            </div>
+                        </div>
+
+                        <!-- Highlight item 2 -->
+                        <div class="group relative bg-white overflow-hidden rounded-xl border border-lulu-clay/20 shadow-sm">
+                            <div class="h-80 overflow-hidden relative">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQJskvoBD-Ir-7lSmVzNVr46skLfvfGwlgJA&s" alt="Cashmere set" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Cashmere+Set'">
+                                <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="font-serif text-lg font-medium text-lulu-charcoal">Belted Utility Romper</h3>
+                                <a href="#gallery" onclick="navigateTo('gallery')" class="inline-block mt-3 text-xs uppercase tracking-widest font-semibold text-lulu-gold hover:text-lulu-charcoal transition-colors">Discover LULU</a>
+                            </div>
+                        </div>
+
+                        <!-- Highlight item 3 -->
+                        <div class="group relative bg-white overflow-hidden rounded-xl border border-lulu-clay/20 shadow-sm">
+                            <div class="h-80 overflow-hidden relative">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWgAT6tC4IwyITwIOSp6jR219oMN4FGGQ3ng&s" alt="Silk blouse" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Silk+Blouse'">
+                                <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="font-serif text-lg font-medium text-lulu-charcoal">Leopard Print Jumpsuit</h3>
+                                <a href="#gallery" onclick="navigateTo('gallery')" class="inline-block mt-3 text-xs uppercase tracking-widest font-semibold text-lulu-gold hover:text-lulu-charcoal transition-colors">Discover LULU</a>
+                            </div>
+                        </div>
+
+                        <!-- Highlight item 4 -->
+                        <div class="group relative bg-white overflow-hidden rounded-xl border border-lulu-clay/20 shadow-sm">
+                            <div class="h-80 overflow-hidden relative">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiwVTxIVj_gN3RTWYlj0tBYvGPs238qoAtyw&s" alt="Cocktail dress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Cocktail+Dress'">
+                                <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="font-serif text-lg font-medium text-lulu-charcoal">Emerald Eyelet Set</h3>
+                                <a href="#gallery" onclick="navigateTo('gallery')" class="inline-block mt-3 text-xs uppercase tracking-widest font-semibold text-lulu-gold hover:text-lulu-charcoal transition-colors">Discover LULU</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 2. ABOUT PAGE VIEW                         -->
+        <!-- ========================================== -->
+        <section id="view-about" class="view-section animate-fade-in">
+            <!-- Header banner -->
+            <div class="bg-lulu-sand py-16 border-b border-lulu-clay/10 text-center">
+                <h1 class="font-serif text-4xl md:text-6xl font-light text-lulu-charcoal mt-2">LULU CLOTHING</h1>
+                <div class="w-12 h-[1px] bg-lulu-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <!-- Overview Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
+                    <div class="lg:col-span-6 space-y-6">
+                        <h2 class="font-serif text-3xl md:text-4xl font-light text-lulu-charcoal">Slow Fashion, Handcrafted for Life</h2>
+                        <p class="text-sm text-lulu-charcoal/70 leading-relaxed">
+                            LULU clothing is a popular women's boutique located on the ground floor of the Medhane Alem Mall (right next to Edna Mall) in Addis Ababa. The store specializes in trendy women's apparel, dresses, fashion accessories, and cosmetics.
+                        </p>
+                        <p class="text-sm text-lulu-charcoal/70 leading-relaxed">
+                            We design all collections natively in-house, working side-by-side with local ethical mills and independent women-led artisan collectives worldwide. Our focus remains centered on beautiful drape work, high durability, and organic luxury fabric compositions.
+                        </p>
+                    </div>
+                    <div class="lg:col-span-6">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b6bYrcWRNYitvL5qCkMz9KwFwmpXSlqlLg&s" alt="Atelier Interior" class="rounded-xl shadow-lg w-full h-96 object-cover" onerror="this.src='https://placehold.co/800x600/E9E4DB/1A1A1A?text=LULU+Atelier'">
+                    </div>
+                </div>
+
+                <!-- Mission and Vision -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-16 border-t border-b border-lulu-clay/30 bg-white rounded-xl p-8 mb-24 shadow-sm">
+                    <div class="space-y-4">
+                        <div class="text-lulu-gold"><i class="fa-solid fa-bullseye text-3xl"></i></div>
+                        <h3 class="font-serif text-2xl font-semibold text-lulu-charcoal">Our Mission</h3>
+                        <p class="text-sm text-lulu-charcoal/70 leading-relaxed">To design elegant, high-performance garments that instill profound confidence in modern women, while advocating for and maintaining absolute transparency, non-toxic organic sourcing, and fair-wage craftsmanship globally.</p>
+                    </div>
+                    <div class="space-y-4 border-t md:border-t-0 md:border-l border-lulu-clay/30 pt-8 md:pt-0 md:pl-12">
+                        <div class="text-lulu-gold"><i class="fa-solid fa-eye text-3xl"></i></div>
+                        <h3 class="font-serif text-2xl font-semibold text-lulu-charcoal">Our Vision</h3>
+                        <p class="text-sm text-lulu-charcoal/70 leading-relaxed">To transition the global fashion community away from trend-induced fast production and establish LULU as an international benchmark for aesthetic-forward, circular-economy luxury apparel.</p>
+                    </div>
+                </div>
+
+                <!-- Team Section -->
+                <div>
+                    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-lulu-gold">Beautiful</span>
+                        <h2 class="font-serif text-4xl font-light text-lulu-charcoal">LULU's Fashion</h2>
+                        <div class="w-16 h-[2px] bg-lulu-gold mx-auto"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Member 1 -->
+                        <div class="text-center group">
+                            <div class="relative overflow-hidden rounded-xl h-80 mb-4 shadow-sm">
+                                <img src="https://z-p3-scontent.fadd2-1.fna.fbcdn.net/v/t51.82787-15/729654129_18407047369153566_1625042064465419221_n.jpg?stp=dst-jpg_tt6&cstp=mx812x1082&ctp=s590x590&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHfJZz_NkYQQtfuYSZibDduWDC0yAC1h2hYMLTIALWHaHBUVEgFCvzhlD5G_I4bbLzXnFxhoi80vcXTxnDK_cT5&_nc_ohc=rS6TQNIFlLsQ7kNvwG9GJrf&_nc_oc=Adoq-cep5-uxUf71M6PSsXe-LWjboIH_3Sx24vj9WQpFW3MSI6Z2nM5eMRrfHeXGFCM&_nc_zt=23&_nc_ht=z-p3-scontent.fadd2-1.fna&_nc_gid=RyxVzes1xxXM3QUjAD_xsw&_nc_ss=7b2a8&oh=00_AQChr9kg8KlmDzhKClB-fjdATuk7ucPh0Mok7YV-iKx8gg&oe=6A502744" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Helena+Rostova'">
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-lulu-charcoal">Outfit</h3>
+                            <p class="text-xs text-lulu-gold uppercase tracking-wider font-medium mt-1">Available In Store</p>
+                        </div>
+
+                        <!-- Member 2 -->
+                        <div class="text-center group">
+                            <div class="relative overflow-hidden rounded-xl h-80 mb-4 shadow-sm">
+                                <img src="https://z-p3-scontent.fadd2-1.fna.fbcdn.net/v/t51.82787-15/717265108_18404262025153566_6495392521607711575_n.jpg?stp=dst-jpg_tt6&cstp=mx1760x2347&ctp=s1760x2347&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHXKJKV7_9W8MtgzWElmcgx95QlRKGRFIL3lCVEoZEUgphqXjUpZWWUT_mBUrcJzMyN4FJyqJnSLlhCYSYw3EVW&_nc_ohc=cfZCA-Zi_NgQ7kNvwEOkPQX&_nc_oc=AdoV1ILsL8MZd7KmM-ipIwIM2WnFAsPoekpZzsJfDu5DEPW8p54mcfAueiBav54AzoY&_nc_zt=23&_nc_ht=z-p3-scontent.fadd2-1.fna&_nc_gid=ubNagxs3dWP9tt5iSh39EA&_nc_ss=7b2a8&oh=00_AQDOiVbtCgKv2OCGx4vheWPyijZP6GsPvr7dHfertVbMQg&oe=6A5029E9" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Sarah+Jenkins'">
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-lulu-charcoal">Cow print outfit</h3>
+                            <p class="text-xs text-lulu-gold uppercase tracking-wider font-medium mt-1">Available In Store</p>
+                        </div>
+
+                        <!-- Member 3 -->
+                        <div class="text-center group">
+                            <div class="relative overflow-hidden rounded-xl h-80 mb-4 shadow-sm">
+                                <img src="https://z-p3-scontent.fadd2-1.fna.fbcdn.net/v/t51.75761-15/480299391_18342874522153566_9219871189429133567_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s640x640&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHxQBzx_9MmPMz4cC4HglaN1BkAXlJaVP3UGQBeUlpU_ctpe_N9dmg9RrRWKjf1XD39qz-D8Dp5VJ5jVn1Kdhkd&_nc_ohc=Hxr_iRdwNL0Q7kNvwFBVDMS&_nc_oc=AdqjzEu207tZWpj7RgyPcIM6riM-pRisnQ_iiMCLdVP7W_Mpqm-BOrCwQZ8YF2dMxlo&_nc_zt=23&_nc_ht=z-p3-scontent.fadd2-1.fna&_nc_gid=bDqBSE_5rXuc9-890rOw1g&_nc_ss=7b2a8&oh=00_AQDqhGyNl_aiuRl8Exy50A4844Wbz4Q3NinPHshOHojvQA&oe=6A5034D0" alt="Polka dots fashion" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Camille+Dufour'">
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-lulu-charcoal">Polka dots</h3>
+                            <p class="text-xs text-lulu-gold uppercase tracking-wider font-medium mt-1">Available In Store </p>
+                        </div>
+
+                        <!-- Member 4 -->
+                        <div class="text-center group">
+                            <div class="relative overflow-hidden rounded-xl h-80 mb-4 shadow-sm">
+                                <img src="https://z-p3-scontent.fadd2-1.fna.fbcdn.net/v/t39.30808-6/467397220_18331659757153566_1879879509465166527_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s590x590&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEkW8JffGOPXELo693SQbMcQ61FNm9oJUpDrUU2b2glSiy3B_IWnTxLxOTxTnffTR4V9UVp52LVppyhtSnoQj20&_nc_ohc=INsCbIP9hOEQ7kNvwElmd1c&_nc_oc=Adr32jGZngeA5jPNfqAM-J_fP1bGbTvL_v3Z2m3-ttLNMjDFHYeKptx7I88OYxJxbK8&_nc_zt=23&_nc_ht=z-p3-scontent.fadd2-1.fna&_nc_gid=pGxwggEDsXHhMhXE0tupxg&_nc_ss=7b2a8&oh=00_AQDxq5mzf9fY-ydclV90x3CQZ7pU4P4GsV0pgedyjqHzlg&oe=6A505E73" alt="DENIM Dress fashion" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Audrey+Vance'">
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-lulu-charcoal">DENIM Dress </h3>
+                            <p class="text-xs text-lulu-gold uppercase tracking-wider font-medium mt-1">Available In Store</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 3. SERVICES PAGE VIEW                      -->
+        <!-- ========================================== -->
+        <section id="view-services" class="view-section animate-fade-in">
+            <!-- Header banner -->
+            <div class="bg-lulu-sand py-16 border-b border-lulu-clay/10 text-center">
+                <span class="text-xs font-semibold uppercase tracking-[0.2em] text-lulu-gold">Signature Experiences</span>
+                <h1 class="font-serif text-4xl md:text-6xl font-light text-lulu-charcoal mt-2">Bespoke Fashion Services</h1>
+                <div class="w-12 h-[1px] bg-lulu-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <p class="text-lulu-charcoal/70">At LULU, fashion is a relationship, not just a purchase. We provide dedicated luxury services to curate and fit your items with absolute excellence.</p>
+                </div>
+
+                <!-- Detailed Services Layout -->
+                <div class="space-y-16">
+                    <!-- Service 1 -->
+                    <div class="flex flex-col lg:flex-row items-center gap-12 bg-white rounded-2xl p-6 lg:p-12 shadow-sm border border-lulu-clay/10">
+                        <div class="w-full lg:w-1/2">
+                            <img src="https://z-p3-scontent.fadd2-1.fna.fbcdn.net/v/t39.30808-6/480333628_1080580547442210_8829036966414087448_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1799&ctp=s640x640&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHwkqllI8c7EJ02UEYTPw_vZLjV6XrR7wNkuNXpetHvA1sLfIqQe5Z4awfk_Y7U40M3s_CFQxcSGLvNbndGz_o1&_nc_ohc=vBjUhprnWCMQ7kNvwGyM2a1&_nc_oc=AdoL5w56QDsRO0srigaPwPK12c4gg9Qhjk-lG9D74lE0Na57moAUtM3YgW9IDBvm1ys&_nc_zt=23&_nc_ht=z-p3-scontent.fadd2-1.fna&_nc_gid=BzX2TWTQmeghcITKqEwu7A&_nc_ss=7b2a8&oh=00_AQD9kQhE8Nzdhd4ELAsI6SD7Uh0h2_17nCScalawZu1n9w&oe=6A5063C7" alt="Atelier Measurement" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://placehold.co/600x400/E9E4DB/1A1A1A?text=Private+Fitting'">
+                        </div>
+                        <div class="w-full lg:w-1/2 space-y-4">
+                            <span class="text-xs font-bold text-lulu-gold tracking-widest uppercase">In-Atelier & Virtual</span>
+                            <h3 class="font-serif text-3xl font-light text-lulu-charcoal">Personal Tailoring & Fit Architecture</h3>
+                            <p class="text-sm text-lulu-charcoal/70 leading-relaxed">Make sure every item fits you perfectly. Our tailoring team can adjust sleeve length, shorten or lengthen hems, and create custom designs to match your style and size.</p>
+                            <ul class="text-xs text-lulu-charcoal/80 space-y-2 font-medium">
+                                <li><i class="fa-solid fa-check text-lulu-gold mr-2"></i> Complimentry basic alterations on standard items</li>
+                                <li><i class="fa-solid fa-check text-lulu-gold mr-2"></i> Direct designer consultations available by booking</li>
+                                <li><i class="fa-solid fa-check text-lulu-gold mr-2"></i> Custom-made silhouettes modeled to exact body metrics</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="flex flex-col lg:flex-row-reverse items-center gap-12 bg-white rounded-2xl p-6 lg:p-12 shadow-sm border border-lulu-clay/10">
+                        <div class="w-full lg:w-1/2">
+                            <img src="https://z-p3-scontent.fadd2-1.fna.fbcdn.net/v/t39.30808-6/467150061_18331657888153566_1492949623640318767_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1791&ctp=s640x640&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFYMeMOTlmFJV22jbwhKYlHTRp6oK13Qk1NGnqgrXdCTc0O1hLUsHhy_-JDX9Ygttz4cxqIPgwrifa99HBlMeTS&_nc_ohc=f4ha8wpxfaEQ7kNvwGFQaLK&_nc_oc=AdqfyRm80cCaDA7E9q6-4jZpqKjrhEyfeBKhq0P5d-fSkgUq5TTMuPgtougbR3rDx_8&_nc_zt=23&_nc_ht=z-p3-scontent.fadd2-1.fna&_nc_gid=mc3pR8XkpNNXNehMYXWiMQ&_nc_ss=7b2a8&oh=00_AQBzwHDij71t66XzyqEYlHCveWLJdXRDtZyKVUVDRIZzuw&oe=6A504631" alt="Private Styling" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://placehold.co/600x400/E9E4DB/1A1A1A?text=Private+Styling'">
+                        </div>
+                        <div class="w-full lg:w-1/2 space-y-4">
+                            <span class="text-xs font-bold text-lulu-gold tracking-widest uppercase">Curated Elegance</span>
+                            <h3 class="font-serif text-3xl font-light text-lulu-charcoal">Private Styling & Capsule Curations</h3>
+                            <p class="text-sm text-lulu-charcoal/70 leading-relaxed">Let our style experts help you refresh your seasonal wardrobe. Our experienced team can create a complete wardrobe for work, special events, and relaxing beach vacations.</p>
+                            <ul class="text-xs text-lulu-charcoal/80 space-y-2 font-medium">
+                                <li><i class="fa-solid fa-check text-lulu-gold mr-2"></i> Detailed personal color profiling</li>
+                                <li><i class="fa-solid fa-check text-lulu-gold mr-2"></i> Virtual interactive closet audit boards</li>
+                                <li><i class="fa-solid fa-check text-lulu-gold mr-2"></i> Priority custom production list access</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Packages -->
+                <div class="mt-24">
+                    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-lulu-gold">Styling Services</span>
+                        <h2 class="font-serif text-4xl font-light text-lulu-charcoal">Transparent Pricing</h2>
+                        <div class="w-16 h-[2px] bg-lulu-gold mx-auto"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Package 1 -->
+                        <div class="bg-lulu-sand p-8 rounded-2xl shadow-md border-2 border-lulu-gold text-center relative space-y-6">
+                            <h4 class="font-serif text-2xl font-bold text-lulu-charcoal">Individual Curation</h4>
+                            <div class="text-4xl font-serif text-lulu-gold font-light">$120<span class="text-xs text-lulu-charcoal/50">/session</span></div>
+                            <p class="text-xs text-lulu-charcoal/70 leading-relaxed">Ideal for specific occasions. Meet with an expert online or in-store to select the absolute ideal wardrobe solution.</p>
+                            <div class="border-t border-lulu-clay/20 pt-6">
+                                <ul class="text-xs text-lulu-charcoal/70 space-y-3 mb-8">
+                                    <li>60-minute styling consultation</li>
+                                    <li>3 custom outfit boards designed</li>
+                                    <li>Complimentary sizing fittings</li>
+                                </ul>
+                                <button onclick="navigateTo('contact')" class="w-full py-3 border bg-lulu-charcoal hover:bg-lulu-gold hover:text-white text-white text-xs uppercase tracking-widest font-semibold transition-colors">Book Consultation</button>
+                            </div>
+                        </div>
+
+                        <!-- Package 2 (Highlight) -->
+                        <div class="bg-lulu-sand p-8 rounded-2xl shadow-md border-2 border-lulu-gold text-center relative space-y-6">
+                            <span class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-lulu-gold text-white text-[9px] uppercase font-bold tracking-[0.2em] px-4 py-1.5 rounded-full shadow-sm">MOST POPULAR</span>
+                            <h4 class="font-serif text-2xl font-bold text-lulu-charcoal">Capsule Wardrobe Audit</h4>
+                            <div class="text-4xl font-serif text-lulu-gold font-light">$350<span class="text-xs text-lulu-charcoal/50">/session</span></div>
+                            <p class="text-xs text-lulu-charcoal/70 leading-relaxed">A complete seasonal alignment. We reorganize 10 premium pieces to construct over 30 unique, classic, daily aesthetics.</p>
+                            <div class="border-t border-lulu-clay/20 pt-6">
+                                <ul class="text-xs text-lulu-charcoal/70 space-y-3 mb-8">
+                                    <li>120-minute master consultation</li>
+                                    <li>Exclusive digital stylebook map</li>
+                                    <li>15% discount on new boutique items</li>
+                                    <li>Free bespoke hem styling</li>
+                                </ul>
+                                <button onclick="navigateTo('contact')" class="w-full py-3 bg-lulu-charcoal hover:bg-lulu-gold text-white text-xs uppercase tracking-widest font-semibold transition-colors">Book Masterclass</button>
+                            </div>
+                        </div>
+
+                        <!-- Package 3 -->
+                        <div class="bg-lulu-sand p-8 rounded-2xl shadow-md border-2 border-lulu-gold text-center relative space-y-6">
+                            <h4 class="font-serif text-2xl font-bold text-lulu-charcoal">Executive Bespoke Membership</h4>
+                            <div class="text-4xl font-serif text-lulu-gold font-light">$800<span class="text-xs text-lulu-charcoal/50">/annual</span></div>
+                            <p class="text-xs text-lulu-charcoal/70 leading-relaxed">Year-round style protection. Dedicated private tailor and access to rare couture releases ahead of general buyers.</p>
+                            <div class="border-t border-lulu-clay/20 pt-6">
+                                <ul class="text-xs text-lulu-charcoal/70 space-y-3 mb-8">
+                                    <li>4 priority seasonal consultations</li>
+                                    <li>Unlimited custom adjustments</li>
+                                    <li>Complimentary luxury gift wrapping</li>
+                                    <li>VIP invite to major runway shows</li>
+                                </ul>
+                                <button onclick="navigateTo('contact')" class="w-full py-3 border bg-lulu-charcoal hover:bg-lulu-gold text-white text-xs uppercase tracking-widest font-semibold transition-colors">Apply For Membership</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 4. GALLERY / SHOP PAGE VIEW                -->
+        <!-- ========================================== -->
+        <section id="view-gallery" class="view-section animate-fade-in">
+            <!-- Header banner -->
+            <div class="bg-lulu-sand py-12 border-b border-lulu-clay/10 text-center">
+                <span class="text-xs font-semibold uppercase tracking-[0.2em] text-lulu-gold">Collections</span>
+                <h1 class="font-serif text-4xl md:text-5xl font-light text-lulu-charcoal mt-2">The <b><i>LULU CLOTHING</i></b> Gallery Shop</h1>
+                <div class="w-12 h-[1px] bg-lulu-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <!-- Search & Filters -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-lulu-clay/30 mb-10">
+                    <!-- Search Input Box -->
+                    <div class="relative w-full md:w-80">
+                        <input type="text" id="gallery-search" oninput="filterGallery()" placeholder="Search our creations..." class="w-full pl-10 pr-4 py-3 bg-white border border-lulu-clay/30 rounded-full text-xs text-lulu-charcoal focus:outline-none focus:border-lulu-gold transition-colors">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-lulu-charcoal/40 text-sm"></i>
+                    </div>
+
+                    <!-- Category Badges Filters -->
+                    <div class="flex flex-wrap gap-2" id="gallery-filters">
+                        <button onclick="setGalleryFilter('all')" class="gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-lulu-charcoal text-white hover:bg-lulu-gold hover:text-white transition-colors" data-filter="all">All Items</button>
+                        <button onclick="setGalleryFilter('Dresses')" class="gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-white text-lulu-charcoal border border-lulu-clay/30 hover:bg-lulu-gold hover:text-white transition-colors" data-filter="Dresses">Dresses</button>
+                        <button onclick="setGalleryFilter('Asymmetric')" class="gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-white text-lulu-charcoal border border-lulu-clay/30 hover:bg-lulu-gold hover:text-white transition-colors" data-filter="Outerwear">Asymmetric</button>
+                        <button onclick="setGalleryFilter('Activewear')" class="gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-white text-lulu-charcoal border border-lulu-clay/30 hover:bg-lulu-gold hover:text-white transition-colors" data-filter="Separates">Activewear</button>
+                        <button onclick="setGalleryFilter('Co-ord')" class="gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-white text-lulu-charcoal border border-lulu-clay/30 hover:bg-lulu-gold hover:text-white transition-colors" data-filter="Loungewear">Co-ord</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="gallery-product-grid">
+                    <!-- Products will be loaded dynamically here via javascript -->
+                </div>
+
+                <!-- Empty State Message -->
+                <div id="gallery-empty-state" class="hidden text-center py-20">
+                    <i class="fa-solid fa-cloud-rain text-4xl text-lulu-gold/40 mb-4"></i>
+                    <h3 class="font-serif text-2xl font-light text-lulu-charcoal">No Silhouettes Match Your Search</h3>
+                    <p class="text-xs text-lulu-charcoal/60 mt-2">Try resetting your filter categories or typing a different keyword.</p>
+                </div>
+            </div>
+        </section>
+        <!-- ========================================== -->
+        <!-- 5. CONTACT PAGE VIEW                       -->
+        <!-- ========================================== -->
+        <section id="view-contact" class="view-section animate-fade-in">
+            <!-- Header banner -->
+            <div class="bg-lulu-sand py-12 border-b border-lulu-clay/10 text-center">
+                <span class="text-xs font-semibold uppercase tracking-[0.2em] text-lulu-gold">Reach Out</span>
+                <h1 class="font-serif text-4xl md:text-5xl font-light text-lulu-charcoal mt-2">Connect With LULU</h1>
+                <div class="w-12 h-[1px] bg-lulu-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    
+                    <!-- Left: Store info & Leaflet Map integration -->
+                    <div class="lg:col-span-5 space-y-8">
+                        <div class="space-y-4">
+                            <h2 class="font-serif text-3xl font-light text-lulu-charcoal">Flagship LULU CLOTHING</h2>
+                            <p class="text-sm text-lulu-charcoal/70 leading-relaxed">Visit our showroom to browse our fabric collection, meet our expert stylists, and get your clothing professionally fitted for the perfect fit.</p>
+                        </div>
+
+                        <div class="space-y-4 text-sm text-lulu-charcoal/80">
+                            <div class="flex items-start gap-4">
+                                <div class="text-lulu-gold mt-1"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <h4 class="font-bold uppercase tracking-wider text-xs text-lulu-charcoal">Location</h4>
+                                    <p class="mt-1">Medhane Alem Building, Bole, Addis Ababa, Ethiopia</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="text-lulu-gold mt-1"><i class="fa-solid fa-phone"></i></div>
+                                <div>
+                                    <h4 class="font-bold uppercase tracking-wider text-xs text-lulu-charcoal">Client Relations</h4>
+                                    <p class="mt-1">+251-911602181</p>
+                                </div>
+                            </div>
+                              <div class="flex items-start gap-4">
+                                <div class="text-lulu-gold mt-1"><i class="fa-solid fa-clock"></i></div>
+                                <div>
+                                    <h4 class="font-bold uppercase tracking-wider text-xs text-lulu-charcoal">Shopping Hours</h4>
+                                    <p class="mt-1">Monday – Saturday: 9:30 AM – 8:00 PM <br> Sunday: 11:00 AM – 8:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fully Functional Map Div Container -->
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-lulu-gold">Interactive Map</span>
+                            <div id="boutique-map" class="shadow-md border border-lulu-clay/20"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Contact Form with full validation -->
+                    <div class="lg:col-span-7 bg-white p-8 lg:p-12 rounded-2xl border border-lulu-clay/15 shadow-sm space-y-6">
+                        <div class="space-y-2">
+                            <h3 class="font-serif text-3xl font-light text-lulu-charcoal">Customer Request</h3>
+                            <p class="text-xs text-lulu-charcoal/60">We generally respond within 24 working hours to styling or appointment requests.</p>
+                        </div>
+
+                        <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs uppercase font-semibold tracking-wider text-lulu-charcoal/70 mb-2" for="contact-name">First Name *</label>
+                                    <input type="text" id="contact-name" required class="w-full px-4 py-3 bg-lulu-beige border border-lulu-clay/30 rounded-xl text-xs text-lulu-charcoal focus:outline-none focus:border-lulu-gold">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-semibold tracking-wider text-lulu-charcoal/70 mb-2" for="contact-lastname">Last Name *</label>
+                                    <input type="text" id="contact-lastname" required class="w-full px-4 py-3 bg-lulu-beige border border-lulu-clay/30 rounded-xl text-xs text-lulu-charcoal focus:outline-none focus:border-lulu-gold">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase font-semibold tracking-wider text-lulu-charcoal/70 mb-2" for="contact-email">Email Address *</label>
+                                <input type="email" id="contact-email" required class="w-full px-4 py-3 bg-lulu-beige border border-lulu-clay/30 rounded-xl text-xs text-lulu-charcoal focus:outline-none focus:border-lulu-gold">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase font-semibold tracking-wider text-lulu-charcoal/70 mb-2" for="contact-service">Preferred Service *</label>
+                                <select id="contact-service" required class="w-full px-4 py-3 bg-lulu-beige border border-lulu-clay/30 rounded-xl text-xs text-lulu-charcoal focus:outline-none focus:border-lulu-gold">
+                                    <option value="" disabled selected>Select a Service</option>
+                                    <option value="private-styling">Private Capsule Styling Consultation</option>
+                                    <option value="bespoke-sizing">Customer Sizing Fit Alteration</option>
+                                    <option value="press">Press & Editorial Inquiry</option>
+                                    <option value="other">General Partnership Inquiries</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase font-semibold tracking-wider text-lulu-charcoal/70 mb-2" for="contact-message">Message Details *</label>
+                                <textarea id="contact-message" rows="5" required placeholder="Let us know how we can customize your fashion journey..." class="w-full px-4 py-3 bg-lulu-beige border border-lulu-clay/30 rounded-xl text-xs text-lulu-charcoal focus:outline-none focus:border-lulu-gold"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-4 bg-lulu-charcoal text-white text-xs uppercase tracking-widest font-semibold hover:bg-lulu-gold transition-colors duration-200 rounded-xl shadow-md">
+                                Submit Atelier Request
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-lulu-charcoal text-white border-t border-lulu-gold/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center">
+            <!-- Centered Brand Logo Signature -->
+            <a href="#home" onclick="navigateTo('home')" class="flex flex-col items-center select-none mb-6">
+                <span class="font-serif text-4xl font-light tracking-[0.25em] text-white uppercase leading-none">LULU</span>
+                <span class="text-[10px] tracking-[0.5em] text-lulu-gold uppercase font-medium mt-2">C L O T H I N G</span>
+            </a>
+
+            <!-- Modern Contact & Social Icons -->
+            <div class="flex items-center justify-center space-x-4 mb-8">
+                <a target="_blank" title="Facebook" href="https://web.facebook.com/people/LULU/100064708241803/?locale=nb_NO#" class="group flex items-center justify-center w-10 h-10 rounded-full border border-white/10 text-white hover:text-lulu-gold hover:border-lulu-gold hover:bg-white/5 transition-all duration-300 transform hover:-translate-y-1" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f text-md"></i>
+                </a>
+                <a target="_blank" title="Instagram" href="https://www.instagram.com/lulu__addis?igsh=a3pmb3lwd280a2t2" class="group flex items-center justify-center w-10 h-10 rounded-full border border-white/10 text-white hover:text-lulu-gold hover:border-lulu-gold hover:bg-white/5 transition-all duration-300 transform hover:-translate-y-1" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram text-md"></i>
+                </a>
+                <a target="_blank" title="TikTok" href="https://www.tiktok.com/@lulu_addis?_r=1&_t=ZS-97Yamaj6qbY" class="group flex items-center justify-center w-10 h-10 rounded-full border border-white/10 text-white hover:text-lulu-gold hover:border-lulu-gold hover:bg-white/5 transition-all duration-300 transform hover:-translate-y-1" aria-label="TikTok">
+                    <i class="fa-brands fa-tiktok text-md"></i>
+                </a>
+            </div>
+
+            <!-- Horizontal Separator & Bottom Info -->
+            <div class="w-full border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-white/40 gap-4">
+                <p>&copy; 2026 LULU Clothing Couture Inc. All Rights Reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-lulu-gold transition-colors">Privacy Charter</a>
+                    <a href="#" class="hover:text-lulu-gold transition-colors">Terms of Use</a>
+                    <a href="#" class="hover:text-lulu-gold transition-colors">Transparency Statement</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- INTERACTIVE MODAL: QUICK VIEW DETAIL       -->
+    <!-- ========================================== -->
+    <div id="quickview-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300" onclick="closeQuickView()">
+        <!-- Quick View Card (Stop propagation to prevent self closure) -->
+        <div id="quickview-card" class="bg-lulu-beige max-w-3xl w-full rounded-2xl overflow-hidden shadow-2xl relative grid grid-cols-1 md:grid-cols-2" onclick="event.stopPropagation()">
+            <!-- Close trigger -->
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 bg-white/80 hover:bg-white text-lulu-charcoal hover:text-lulu-gold p-2 rounded-full transition-colors shadow-sm">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Image View Container -->
+            <div class="h-64 md:h-full min-h-[350px] overflow-hidden relative">
+                <img id="quick-img" src="" alt="Product" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Content Details Container -->
+            <div class="p-8 flex flex-col justify-between space-y-6">
+                <div class="space-y-4">
+                    <span id="quick-category" class="text-xs uppercase tracking-widest text-lulu-gold font-bold">Category</span>
+                    <h3 id="quick-title" class="font-serif text-3xl font-light text-lulu-charcoal leading-tight">Product Title</h3>
+                    <p id="quick-price" class="text-lg font-serif text-lulu-gold font-medium">0.00</p>
+                    <div class="w-12 h-[1px] bg-lulu-gold"></div>
+                    <p id="quick-desc" class="text-xs text-lulu-charcoal/70 leading-relaxed">Detailed silhouette specification goes here. Natural fibers guarantee premium wear.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- DYNAMIC POPUP TOAST SYSTEM                -->
+    <!-- ========================================== -->
+    <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col space-y-3 pointer-events-none max-w-xs sm:max-w-sm w-full">
+        <!-- Toast instances generated dynamically via showToast function -->
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- CORE JAVASCRIPT SYSTEM                    -->
+    <!-- ========================================== -->
+    <script>
+        /*
+          LULU CLOTHING WEB APP ENGINE
+          Handles multi-page single-page routing, filters, state management, UI carousels, maps, and responsive drawer toggles.
+        */
+
+        // State Manager Object
+        const AppState = {
+            currentView: 'home',
+            cart: [],
+            galleryFilter: 'all',
+            blogFilter: 'all',
+            mapInstance: null,
+            mapInitialized: false,
+            
+            // Premium Mock Product Silhouettes Data
+            products: [
+                {
+                    id: 1,
+                    title: "Elegant Olive Asymmetrical Top",
+                    price: 289.00,
+                    category: "Asymmetric",
+                    image: "https://z-p3-scontent.fadd1-1.fna.fbcdn.net/v/t51.82787-15/714264477_18403828810153566_2330881709148859520_n.jpg?stp=dst-jpg_tt6&cstp=mx1001x1334&ctp=s590x590&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGHVxxT0m6a058k3-qcVtT_3CPq1lVkBtzcI-rWVWQG3DT8R2HhMQ30obAc9_Ku3S0xAQGMMJHmC2AdVywU194E&_nc_ohc=A24_5l1V9LEQ7kNvwGZUIUH&_nc_oc=AdooxOogs_Jtd3rVY0yL-TVjJFiAHMR6MBckbQs-tXz1zwhUl-tJSWomPX6fKFJu36s&_nc_zt=23&_nc_ht=z-p3-scontent.fadd1-1.fna&_nc_gid=ikS_N3cTs7y3cTsjbeUOEg&_nc_ss=7b2a8&oh=00_AQBkdBeamfB07PwQ8v0rFLnpIX3HRkM1mO3w5U3LSjwDGQ&oe=6A503B1D",
+                    description: "Elevate your everyday style with this chic asymmetrical top. Designed for comfort and modern elegance, it's the perfect piece to make a confident statement wherever you go."
+                },
+                {
+                    id: 2,
+                    title: "Coffee Contrast Active Set",
+                    price: 310.00,
+                    category: "Co-ord",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZOB14acXF0rUTYG4t03tGb_QvL94vZDQeSw&s",
+                    description: "Elevate your daily look with this chic, neutral matching set. Featuring a comfy sports bra with stylish contrast trim and matching high-waisted leggings, it is designed to hold you in and keep you moving with total confidence. Perfect for your next workout or a relaxed coffee run!"
+                },
+                {
+                    id: 3,
+                    title: "Sculpt Active Zip Jacket",
+                    price: 145.00,
+                    category: "Activewear",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-iQtHlkHAOS6p79_2UshZPKkIqy21EG_tpQ&s",
+                    description: "Get a sleek, flattering look with this comfy active jacket. Made from soft, stretchy fabric, it moves with you perfectly—whether you are working out or just out and about."
+                },
+                {
+                    id: 4,
+                    title: "Wild Elegance Leopard Print Dress",
+                    price: 220.00,
+                    category: "Dresses",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR10dOnXclk1G8nqiCQkwJf4ncCZH_yUwFQsQ&s",
+                    description: "Unleash your confidence with this stunning leopard print dress. Designed for bold style and effortless elegance, it's the perfect choice for making every moment unforgettable."
+                },
+                {
+                    id: 5,
+                    title: "Classic Black Contrast Trim Dress",
+                    price: 180.00,
+                    category: "Dresses",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAW8p9KHB82qCxzDOC3TWOTrZASfG1Y-0DTw&s",
+                    description: "Turn heads with this elegant contrast-trim mini dress, designed to blend timeless style with everyday comfort. Perfect for casual outings, work, or special occasions—wear confidence wherever you go."
+                },
+                {
+                    id: 6,
+                    title: "Tropical Escape Two-Piece",
+                    price: 240.00,
+                    category: "Asymmetric",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBaG8--6TU9Pud_O79FJL6YUNqL2xFb1NLTQ&s",
+                    description: "Turn heads in this vibrant floral matching set, featuring a chic crop top and a flowing maxi skirt with a high-leg slit. Perfect for vacations, beach days, or sun-drenched nights—your ultimate getaway look starts here"
+                },
+                {
+                    id: 7,
+                    title: "Mint Fresh Flared Set",
+                    price: 195.00,
+                    category: "Co-ord",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1vwmvQvWn35mZofVdIqypLzrj-77N6Y0pUw&s",
+                    description: "Stand out in style with this bright and trendy two-piece set. It features a cute square-neck crop top with unique waist straps and flattering, wide-flare pants. Perfect for a fun night out or an elevated daytime look that brings effortless energy!"
+                },
+                {
+                    id: 8,
+                    title: "Blush Active Zip Jacket",
+                    price: 130.00,
+                    category: "Activewear",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuZs_8ezPVj1sPbnJpBeNb9vZTLVANSU1M9A&s",
+                    description: "Add a touch of color to your routine with this comfortable, tight-fitting active jacket. Made from soft, stretchy fabric, it keeps you looking great and moving easily all day long."
+                }
+            ],
+
+            // Elegant Mock Diary / Blog Entries
+            blogPosts: [
+                {
+                    id: 1,
+                    title: "The Capsule Wardrobe: 5 Rules of subtraction",
+                    category: "Capsule Wardrobe",
+                    date: "June 18, 2026",
+                    excerpt: "Building a classic capsule collection requires severe, aesthetic editing. Discover how matching colors and structural silhouettes eliminate daily dressing decisions.",
+                    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=700",
+                    content: "Building an elegant wardrobe is less about additions and more about intentional subtraction. Helena Rostova lays down her foundational pillars of capsule dress curation. Focus on strong primary colors (Onyx, Silk White, Warm Sand), buy double-stitch materials, and avoid modern chemical color treatments. This guide outlines exactly how LULU silhouettes coordinate effortlessly."
+                },
+                {
+                    id: 2,
+                    title: "Our Commitment: Fully Circular Silk Operations",
+                    category: "Sustainability",
+                    date: "May 24, 2026",
+                    excerpt: "At LULU, sustainability isn't just a marketing word. Read about our innovative closed-loop water filtration cycles in our partner textile facilities.",
+                    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=700",
+                    content: "How is pure Mulberry silk harvested ethically? LULU Clothing is proud to announce our new direct alignment with fully organic silk facilities in Como, Italy. By ensuring our silk farmers earn a premium wage and implementing non-pollutive organic closed-loop dying processes, we ensure that luxurious fashion leaves no trace on our beautiful planet."
+                },
+                {
+                    id: 3,
+                    title: "Linen Vs Cottons: The Science of High Summer Breathability",
+                    category: "Seasonal Styles",
+                    date: "April 12, 2026",
+                    excerpt: "How fabric structures dictate body moisture thermal ventilation. Discover why linen outperforms synthetic fabrics during sweltering coastal afternoons.",
+                    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=700",
+                    content: "The beautiful structure of natural flax allows linen fabrics to absorb up to 20% of their weight in moisture before ever feeling damp. Explore the fascinating structural differences between industrial high-weave cotton fibers and our hand-scaped European flax linen collection."
+                }
+            ]
+        };
+
+        // Navigation Function
+        function navigateTo(pageId) {
+            // Normalize path string
+            const cleanedPageId = pageId.replace('#', '');
+            
+            // Validate view targets
+            const targetSection = document.getElementById(`view-${cleanedPageId}`);
+            if (!targetSection) return;
+
+            // Hide currently active sections
+            const activeSections = document.querySelectorAll('.view-section');
+            activeSections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Make target section active
+            targetSection.classList.add('active');
+            AppState.currentView = cleanedPageId;
+
+            // Update Navigation Menu Active classes style
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const id = link.id.replace('nav-', '');
+                if (id === cleanedPageId) {
+                    link.classList.add('text-lulu-gold');
+                    link.classList.remove('text-lulu-charcoal/70');
+                } else {
+                    link.classList.remove('text-lulu-gold');
+                    link.classList.add('text-lulu-charcoal/70');
+                }
+            });
+
+            // Smoothly move view scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Initialize Map if contact tab selected
+            if (cleanedPageId === 'contact' && !AppState.mapInitialized) {
+                setTimeout(initializeBoutiqueMap, 100);
+            }
+        }
+
+        // Initialize SPA Routing from Hash
+        function handleHashRouting() {
+            const currentHash = window.location.hash || '#home';
+            navigateTo(currentHash);
+        }
+
+        // Window load listener
+        window.onload = function() {
+            handleHashRouting();
+            loadGalleryProducts();
+            loadBlogArticles();
+            updateCartUI();
+        };
+
+        // Watch window hashes for user click interaction back-button support
+        window.addEventListener('hashchange', handleHashRouting);
+
+
+        // ========================================== -->
+        // DRAWER CONTROLLERS                         -->
+        // ========================================== -->
+
+        // Toggle mobile drawer
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+                backdrop.classList.remove('hidden');
+            } else {
+                menu.classList.add('translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        }
+
+        // Toggle shopping cart
+        function toggleCart() {
+            const cart = document.getElementById('cart-drawer');
+            const backdrop = document.getElementById('cart-drawer-backdrop');
+            
+            if (cart.classList.contains('translate-x-full')) {
+                cart.classList.remove('translate-x-full');
+                backdrop.classList.remove('hidden');
+            } else {
+                cart.classList.add('translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        }
+
+
+        // ========================================== -->
+        // GALLERY / SHOP DYNAMICS                    -->
+        // ========================================== -->
+
+        // Focus search utility
+        function focusSearch() {
+            setTimeout(() => {
+                const searchBox = document.getElementById('gallery-search');
+                if (searchBox) searchBox.focus();
+            }, 300);
+        }
+
+        // Set active search filtering category
+        function setGalleryFilter(category) {
+            AppState.galleryFilter = category;
+            
+            // Adjust buttons visually
+            const buttons = document.querySelectorAll('.gallery-filter-btn');
+            buttons.forEach(btn => {
+                const filterAttr = btn.getAttribute('data-filter');
+                if (filterAttr === category) {
+                    btn.className = "gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-lulu-charcoal text-white hover:bg-lulu-gold hover:text-white transition-colors";
+                } else {
+                    btn.className = "gallery-filter-btn px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-full bg-white text-lulu-charcoal border border-lulu-clay/30 hover:bg-lulu-gold hover:text-white transition-colors";
+                }
+            });
+
+            filterGallery();
+        }
+
+        // Filter and compile shop UI dynamically
+        function filterGallery() {
+            const searchQuery = document.getElementById('gallery-search').value.toLowerCase();
+            const grid = document.getElementById('gallery-product-grid');
+            const emptyState = document.getElementById('gallery-empty-state');
+            
+            // Match criteria
+            const filtered = AppState.products.filter(item => {
+                const matchesCategory = AppState.galleryFilter === 'all' || item.category === AppState.galleryFilter;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            // Draw to layout
+            grid.innerHTML = '';
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                grid.classList.remove('hidden');
+                
+                filtered.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = "group relative bg-white overflow-hidden rounded-xl border border-lulu-clay/10 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between";
+                    card.innerHTML = `
+                        <div class="relative overflow-hidden h-80 bg-lulu-sand">
+                            <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x500/E9E4DB/1A1A1A?text=Product'">
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            
+                            <!-- Quick View Button Overlay -->
+                            <button onclick="triggerQuickView(${product.id})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 text-lulu-charcoal text-[10px] font-bold tracking-widest uppercase py-3 px-6 shadow-md translate-y-12 group-hover:translate-y-0 transition-all duration-300 hover:bg-lulu-gold hover:text-white">
+                                Quick View
+                            </button>
+                        </div>
+                        <div class="p-6 text-center space-y-2 flex-grow flex flex-col justify-between">
+                            <div>
+                                <span class="text-[9px] uppercase tracking-wider text-lulu-gold font-bold">${product.category}</span>
+                                <h3 class="font-serif text-lg font-medium text-lulu-charcoal mt-1 line-clamp-1">${product.title}</h3>
+                                <p class="text-sm text-lulu-gold font-semibold mt-1">$${product.price.toFixed(2)}</p>
+                            </div>
+                           
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // Initialize full collection
+        function loadGalleryProducts() {
+            setGalleryFilter('all');
+        }
+
+
+        // ========================================== -->
+        // BLOG / DIARY DYNAMICS                      -->
+        // ========================================== -->
+
+        // Set blog filters
+        function setBlogCategory(category) {
+            AppState.blogFilter = category;
+            filterBlog();
+        }
+
+        // Compile blog items based on search/category matches
+        function filterBlog() {
+            const searchQuery = document.getElementById('blog-search').value.toLowerCase();
+            const blogContainer = document.getElementById('blog-posts-container');
+            
+            const filtered = AppState.blogPosts.filter(post => {
+                const matchesCategory = AppState.blogFilter === 'all' || post.category === AppState.blogFilter;
+                const matchesSearch = post.title.toLowerCase().includes(searchQuery) || post.content.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            blogContainer.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                blogContainer.innerHTML = `
+                    <div class="text-center py-16 bg-white rounded-2xl border border-lulu-clay/15">
+                        <i class="fa-solid fa-feather-pointed text-3xl text-lulu-gold/40 mb-3"></i>
+                        <h4 class="font-serif text-2xl font-light">No Diary Entries Found</h4>
+                        <p class="text-xs text-lulu-charcoal/60 mt-2">Adjust your search parameters to view other style notebook topics.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(post => {
+                const article = document.createElement('article');
+                article.className = "bg-white rounded-2xl border border-lulu-clay/10 shadow-sm overflow-hidden flex flex-col md:flex-row gap-6 p-6 hover:shadow-md transition-shadow";
+                article.innerHTML = `
+                    <div class="w-full md:w-1/3 h-56 md:h-auto overflow-hidden rounded-xl bg-lulu-sand">
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/E9E4DB/1A1A1A?text=Blog+Image'">
+                    </div>
+                    <div class="w-full md:w-2/3 flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-[10px] uppercase font-bold text-lulu-gold">
+                                <span>${post.category}</span>
+                                <span class="text-lulu-clay/50">&bull;</span>
+                                <span class="text-lulu-charcoal/50">${post.date}</span>
+                            </div>
+                            <h3 class="font-serif text-2xl md:text-3xl font-light text-lulu-charcoal leading-snug">${post.title}</h3>
+                            <p class="text-xs text-lulu-charcoal/70 leading-relaxed">${post.excerpt}</p>
+                        </div>
+                        
+                        <!-- Read full toggle -->
+                        <div>
+                            <button onclick="toggleBlogDetail(this)" class="text-xs uppercase font-bold tracking-widest text-lulu-gold hover:text-lulu-charcoal transition-colors">
+                                Read Entire Article <i class="fa-solid fa-chevron-down ml-1"></i>
+                            </button>
+                            <div class="hidden blog-full-body mt-4 pt-4 border-t border-lulu-clay/15 text-xs text-lulu-charcoal/80 leading-relaxed space-y-3">
+                                <p>${post.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                blogContainer.appendChild(article);
+            });
+        }
+
+        // Toggle full blog detail view
+        function toggleBlogDetail(button) {
+            const body = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.className = "fa-solid fa-chevron-up ml-1";
+                button.innerHTML = `Collapse Article <i class="fa-solid fa-chevron-up ml-1"></i>`;
+            } else {
+                body.classList.add('hidden');
+                icon.className = "fa-solid fa-chevron-down ml-1";
+                button.innerHTML = `Read Entire Article <i class="fa-solid fa-chevron-down ml-1"></i>`;
+            }
+        }
+
+        // Initialize Blog Section
+        function loadBlogArticles() {
+            setBlogCategory('all');
+        }
+
+
+        // ========================================== -->
+        // INTERACTIVE SHOPPING CART STATE ENGINE     -->
+        // ========================================== -->
+
+        // Quick add action handler
+        function quickAddToCart(title, price, image) {
+            // Check if already in cart
+            const exists = AppState.cart.find(item => item.title === title);
+            if (exists) {
+                exists.quantity += 1;
+            } else {
+                AppState.cart.push({
+                    title,
+                    price,
+                    image,
+                    quantity: 1
+                });
+            }
+
+            updateCartUI();
+            showToast(`<i class="fa-solid fa-circle-check text-white mr-2"></i> Selected: ${title} added!`, 'success');
+        }
+
+        // Remove item logic
+        function removeFromCart(title) {
+            AppState.cart = AppState.cart.filter(item => item.title !== title);
+            updateCartUI();
+            showToast(`<i class="fa-solid fa-trash-can text-white mr-2"></i> Removed from selection.`, 'warning');
+        }
+
+        // Adjust specific item amounts
+        function adjustQuantity(title, amount) {
+            const target = AppState.cart.find(item => item.title === title);
+            if (!target) return;
+
+            target.quantity += amount;
+            if (target.quantity <= 0) {
+                removeFromCart(title);
+            } else {
+                updateCartUI();
+            }
+        }
+
+        // Update entire Cart View, badges & subtotal pricing
+        function updateCartUI() {
+            const listContainer = document.getElementById('cart-items-container');
+            const subtotalText = document.getElementById('cart-subtotal');
+            const badge = document.getElementById('cart-badge');
+            const emptySlate = document.getElementById('cart-empty-slate');
+            
+            // Calculate sums
+            let totalQty = 0;
+            let subtotal = 0;
+
+            listContainer.innerHTML = '';
+
+            if (AppState.cart.length === 0) {
+                emptySlate.classList.remove('hidden');
+                badge.classList.add('opacity-0', 'scale-75');
+                badge.classList.remove('opacity-100', 'scale-100');
+            } else {
+                emptySlate.classList.add('hidden');
+                badge.classList.remove('opacity-0', 'scale-75');
+                badge.classList.add('opacity-100', 'scale-100');
+
+                AppState.cart.forEach(item => {
+                    totalQty += item.quantity;
+                    subtotal += (item.price * item.quantity);
+
+                    const itemRow = document.createElement('div');
+                    itemRow.className = "flex items-center justify-between gap-4 bg-white p-4 border border-lulu-clay/10 rounded-xl shadow-sm";
+                    itemRow.innerHTML = `
+                        <div class="w-16 h-20 overflow-hidden rounded bg-lulu-sand flex-shrink-0">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/E9E4DB/1A1A1A?text=Cart'">
+                        </div>
+                        <div class="flex-grow space-y-1">
+                            <h4 class="font-serif text-sm font-semibold text-lulu-charcoal leading-snug line-clamp-1">${item.title}</h4>
+                            <p class="text-xs text-lulu-gold font-medium">$${item.price.toFixed(2)}</p>
+                            
+                            <!-- Quantity Controls -->
+                            <div class="flex items-center space-x-2 pt-1">
+                                <button onclick="adjustQuantity('${item.title.replace(/'/g, "\\'")}', -1)" class="w-6 h-6 rounded-full bg-lulu-sand hover:bg-lulu-gold hover:text-white flex items-center justify-center text-[10px] transition-colors font-bold">-</button>
+                                <span class="text-xs font-semibold px-2">${item.quantity}</span>
+                                <button onclick="adjustQuantity('${item.title.replace(/'/g, "\\'")}', 1)" class="w-6 h-6 rounded-full bg-lulu-sand hover:bg-lulu-gold hover:text-white flex items-center justify-center text-[10px] transition-colors font-bold">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart('${item.title.replace(/'/g, "\\'")}')" class="text-lulu-charcoal/40 hover:text-red-500 p-2 transition-colors">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    `;
+                    listContainer.appendChild(itemRow);
+                });
+            }
+
+            badge.innerText = totalQty;
+            subtotalText.innerText = `$${subtotal.toFixed(2)}`;
+        }
+
+        // Trigger secure Checkout
+        function triggerCheckout() {
+            if (AppState.cart.length === 0) {
+                showToast(`<i class="fa-solid fa-triangle-exclamation text-white mr-2"></i> Your selection bag is currently empty!`, 'warning');
+                return;
+            }
+
+            // Interactive processing simulation without boring window alerts
+            const checkoutBtn = document.getElementById('checkout-button');
+            const originalText = checkoutBtn.innerText;
+            
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerText = "Securing Fashion Pipeline...";
+            checkoutBtn.classList.add('bg-lulu-gold');
+
+            setTimeout(() => {
+                showToast('<i class="fa-solid fa-champagne-glasses text-white mr-2"></i> Selection secured! Welcome to the LULU inner club.', 'success');
+                AppState.cart = [];
+                updateCartUI();
+                toggleCart();
+                
+                checkoutBtn.disabled = false;
+                checkoutBtn.innerText = originalText;
+                checkoutBtn.classList.remove('bg-lulu-gold');
+            }, 2500);
+        }
+
+
+        // ========================================== -->
+        // MODAL QUICK VIEW CONTROLLER                -->
+        // ========================================== -->
+
+        // Open quick view modal
+        function triggerQuickView(productId) {
+            const product = AppState.products.find(p => p.id === productId);
+            if (!product) return;
+
+            // Map variables
+            document.getElementById('quick-img').src = product.image;
+            document.getElementById('quick-category').innerText = product.category;
+            document.getElementById('quick-title').innerText = product.title;
+            document.getElementById('quick-price').innerText = `$${product.price.toFixed(2)}`;
+            document.getElementById('quick-desc').innerText = product.description;
+
+            // Display
+            const modal = document.getElementById('quickview-backdrop');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close quick view
+        function closeQuickView() {
+            const modal = document.getElementById('quickview-backdrop');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+
+        // ========================================== -->
+        // CONTACT FORM & OUTREACH                    -->
+        // ========================================== -->
+       
+        // 1. Added 'async' keyword here
+async function handleContactSubmit(event) {
+    event.preventDefault();
+    
+    // Capture data
+    const firstName = document.getElementById('contact-name').value.trim();
+    const lastName = document.getElementById('contact-lastname').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    const service = document.getElementById('contact-service').value;
+    const message = document.getElementById('contact-message').value.trim();
+
+    // 2. Client-side Validation happens FIRST before fetching
+    if (!firstName || !lastName || !email || !service || !message) {
+        showToast('<i class="fa-solid fa-xmark text-white mr-2"></i> Please complete all mandatory inputs.', 'warning');
+        return; // Stop execution
+    }
+
+    // 4. Show loading spinner state right as the request starts
+    showToast('<i class="fa-solid fa-spinner animate-spin text-white mr-2"></i> Processing secure request...', 'info');
+
+    try {
+        const sendData = { firstName, lastName, email, service, message }; 
+        const url = "http://localhost:2000/luluclothing"; // this url is for local database managment 
+        // const url = "https://portifolio-fullstack-with-mongodb-atlas-luxq.onrender.com/sidejob"; // this url is for cloud database managment
+        
+        const endpointObject = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify(sendData)
+        };
+
+        const res = await fetch(url, endpointObject); 
+        const data = await res.json(); 
+
+        const submitted = "Data is submitted successfully";
+        
+        if (data.Msg === submitted) {
+            // Success response from backend
+            showToast(`<i class="fa-solid fa-envelope-open-text text-white mr-2"></i> Dear ${firstName}, your private request was secured!`, 'success');
+            document.getElementById('contact-form').reset();
+        } else {
+            // Backend validation error (e.g., Duplicate registration handled by your Mongo query)
+            showToast(`<i class="fa-solid fa-triangle-exclamation text-white mr-2"></i> ${data.Msg}`, 'error');
+        }
+
+    } catch (err) {
+        // 3. Fixed: Use 'err.message' or custom text instead of 'data.Msg'
+        console.error("Network error details:", err);
+        showToast('<i class="fa-solid fa-circle-exclamation text-white mr-2"></i> Connection failed. Please try again later.', 'error');
+    }
+}
+
+
+
+        // ========================================== -->
+        // DYNAMIC CUSTOM TOAST NOTIFICATION ENGINE   -->
+        // ========================================== -->
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            // Build dynamic coloring based on brand styles
+            let bgClass = "bg-lulu-charcoal text-white";
+            if (type === 'warning') bgClass = "bg-amber-600 text-white";
+            if (type === 'error') bgClass = "bg-rose-700 text-white";
+
+            toast.className = `${bgClass} flex items-center justify-between p-4 rounded-xl shadow-lg border border-white/10 text-xs tracking-wider transition-all duration-300 transform translate-y-6 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <div class="flex items-center">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-white/60 hover:text-white pl-4">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            // Reflow trigger for slide-up animation
+            setTimeout(() => {
+                toast.classList.remove('translate-y-6', 'opacity-0');
+            }, 50);
+
+            // Automatically clean up toast after delay
+            setTimeout(() => {
+                toast.classList.add('translate-y-6', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+
+        // ========================================== -->
+        // INTERACTIVE MAP (LEAFLET.JS)               -->
+        // ========================================== -->
+
+        function initializeBoutiqueMap() {
+    if (AppState.mapInitialized) return;
+    
+    try {
+        // Exact coordinates of LULU Clothing (BL-03-646 Street off Bole Road, Addis Ababa)
+        const lat = 8.9975;
+        const lng = 38.7866;
+        
+        // Custom interactive Google Maps link provided
+        const googleMapsUrl = "https://maps.google.com/maps?vet=10CAAQoqAOahcKEwjgupaBzqyVAxUAAAAAHQAAAAAQBQ..i&pvq=Cg0vZy8xMWg5Mnh0aHFtIg4KCGNsb3RoaW5nEAIYAw&lqi=ChdjbG90aGluZyBpbiBhZGRpcyBhYmFiYUjT_bKupK-AgAhaHRAAGAAiF2Nsb3RoaW5nIGluIGFkZGlzIGFiYWJhkgEOY2xvdGhpbmdfc3RvcmU&fvr=1&cs=1&um=1&ie=UTF-8&fb=1&gl=et&sa=X&ftid=0x164b8530eabc2c97:0x740e2371db060fb9";
+
+        // Create Map Instance with a detailed street level zoom of 17
+        AppState.mapInstance = L.map('boutique-map', {
+            scrollWheelZoom: false
+        }).setView([lat, lng], 17);
+
+        // Add premium minimal gray scale base layer tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CartoDB &copy; OpenStreetMap'
+        }).addTo(AppState.mapInstance);
+
+        // Custom elegant brand marker icon
+        const goldPin = L.divIcon({
+            className: 'custom-div-icon',
+            html: `<div class="w-8 h-8 rounded-full bg-lulu-charcoal border-2 border-lulu-gold flex items-center justify-center text-white shadow-lg transform -translate-x-1/2 -translate-y-1/2"><i class="fa-solid fa-gem text-xs"></i></div>`,
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+
+        // Attach marker directly to LULU Clothing's true coordinates
+        L.marker([lat, lng], { icon: goldPin })
+            .addTo(AppState.mapInstance)
+            .bindPopup(`
+                <div class="text-center font-sans space-y-2 p-1">
+                    <h4 class="font-serif text-xs font-bold text-lulu-charcoal uppercase tracking-widest">LULU Clothing</h4>
+                    <p class="text-[10px] text-lulu-gold font-medium uppercase mt-0.5">Bole Flagship Store</p>
+                    <p class="text-[10px] text-lulu-charcoal/70">BL-03-646 St (Near Medhane Alem)</p>
+                    <p class="text-[9px] text-lulu-charcoal/50 font-mono">+251 91 160 2181</p>
+                    <div class="pt-1">
+                        <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-[9px] bg-lulu-charcoal text-white hover:bg-lulu-gold px-2.5 py-1.5 rounded transition-colors duration-200 mt-1 uppercase font-semibold tracking-wider">
+                            <i class="fa-solid fa-location-arrow text-[8px]"></i> Open in Google Maps
+                        </a>
+                    </div>
+                </div>
+            `)
+            .openPopup();
+
+        AppState.mapInitialized = true;
+    } catch (err) {
+        console.warn("Unable to initialize Leaflet Map. Falling back elegantly.", err);
+        const mapDiv = document.getElementById('boutique-map');
+        
+        if (mapDiv) {
+            const fallbackLink = "https://maps.google.com/maps?vet=10CAAQoqAOahcKEwjgupaBzqyVAxUAAAAAHQAAAAAQBQ..i&pvq=Cg0vZy8xMWg5Mnh0aHFtIg4KCGNsb3RoaW5nEAIYAw&lqi=ChdjbG90aGluZyBpbiBhZGRpcyBhYmFiYUjT_bKupK-AgAhaHRAAGAAiF2Nsb3RoaW5nIGluIGFkZGlzIGFiYWJhkgEOY2xvdGhpbmdfc3RvcmU&fvr=1&cs=1&um=1&ie=UTF-8&fb=1&gl=et&sa=X&ftid=0x164b8530eabc2c97:0x740e2371db060fb9";
+            mapDiv.innerHTML = `
+                <div class="w-full h-full bg-lulu-sand rounded-xl flex items-center justify-center border border-lulu-clay/30 text-center p-6">
+                    <div class="space-y-3">
+                        <i class="fa-solid fa-map-location-dot text-3xl text-lulu-gold animate-pulse"></i>
+                        <h4 class="font-serif text-lg font-bold text-lulu-charcoal">LULU Clothing Boutique</h4>
+                        <p class="text-xs text-lulu-charcoal/60">BL-03-646 Street, Bole, Addis Ababa, Ethiopia</p>
+                        <p class="text-[11px] font-mono text-lulu-gold">+251 91 160 2181</p>
+                        <div class="pt-2">
+                            <a href="${fallbackLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs bg-lulu-charcoal hover:bg-lulu-gold text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md transform hover:-translate-y-0.5">
+                                <i class="fa-solid fa-map-marked-alt"></i> View on Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+}
+    </script>
+</body>
+</html>
