@@ -1275,8 +1275,8 @@ async function handleContactSubmit(event) {
 
     try {
         const sendData = { firstName, lastName, email, service, message }; 
-        const url = "http://localhost:2000/luluclothing"; // this url is for local database managment 
-        // const url = "https://portifolio-fullstack-with-mongodb-atlas-luxq.onrender.com/sidejob"; // this url is for cloud database managment
+        // const url = "http://localhost:2000/luluclothing"; // this url is for local database managment 
+        const url = "https://luluclothing-website-backend.onrender.com/luluclothing"; // this url is for cloud database managment
         
         const endpointObject = {
             method: "POST",
